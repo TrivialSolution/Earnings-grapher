@@ -2,25 +2,25 @@
 <html>
 <head>
     <title>Stock Earnings</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>Stock Earnings</h1>
+    <div class="container">
+        <h1>Stock Earnings</h1>
 
-    <label for="ticker">Enter Stock Ticker:</label>
-    <input type="text" id="ticker" />
-    <button onclick="fetchEarnings()">Get Earnings</button>
+        <div class="input-container">
+            <label for="ticker">Enter Stock Ticker:</label>
+            <input type="text" id="ticker" />
+            <button onclick="fetchEarnings()">Get Earnings</button>
+        </div>
 
-    <table id="earningsTable">
-        <thead>
-            <tr>
-                <th>Quarter End Date</th>
-                <th>Actual Earnings</th>
-                <th>Earnings Estimate</th>
-            </tr>
-        </thead>
-        <tbody id="earningsBody">
-        </tbody>
-    </table>
+        <canvas id="earningsChart"></canvas>
+
+        <div class="button-container">
+            <button onclick="toggleLines()">Toggle Lines</button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
