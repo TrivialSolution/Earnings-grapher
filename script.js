@@ -31,6 +31,12 @@ function fetchEarnings() {
         }
     };
     xhr.send();
+
+    // Show the "Toggle Lines" button after fetching earnings data
+    document.getElementById("toggleButtonContainer").style.display = "block";
+
+    // Show the table after fetching earnings data
+    document.getElementById("earningsTable").style.display = "table";
 }
 
 function renderChart(dates, actualEarnings, earningsEstimates) {
