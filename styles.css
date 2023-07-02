@@ -54,3 +54,23 @@ canvas {
     display: block;
     margin: 0 auto;
 }
+
+#earningsTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#earningsTable th,
+#earningsTable td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+#earningsTable th {
+    background-color: #f2f2f2;
+    text-align: left;
+}
+
+#earningsTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}

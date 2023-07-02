@@ -27,6 +27,7 @@ function fetchEarnings() {
             }
 
             renderChart(dates, actualEarnings, earningsEstimates);
+            renderTable(dates, actualEarnings, earningsEstimates);
         }
     };
     xhr.send();
@@ -125,13 +126,28 @@ function renderChart(dates, actualEarnings, earningsEstimates) {
     }));
 }
 
+function renderTable(dates, actualEarnings, earningsEstimates) {
+    var tableBody = document.getElementById("earningsTable").getElementsByTagName('tbody')[0];
+    tableBody.innerHTML = '';
+
+    for (var i = 0; i < dates.length; i++) {
+        var row = tableBody.insertRow(i);
+        var dateCell = row.insertCell(0);
+        var actualEarningsCell = row.insertCell(1);
+        var earningsEstimatesCell = row.insertCell(2);
+
+        dateCell.innerHTML = dates[i];
+        actualEarningsCell.innerHTML = actualEarnings[i];
+        earningsEstimatesCell.innerHTML = earningsEstimates[i];
+    }
+}
+
 function toggleLines() {
     showLines = !showLines;
 
     earningsChart.data.datasets.forEach((dataset, index) => {
         dataset.borderWidth = showLines ? 2 : 0;
         dataset.hitRadius += showLines ? -1 : 1;
-        // dataset.radius += showLines ? -1 : 1;
         dataset.hoverRadius += showLines ? -1 : 1;
     });
 
