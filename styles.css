@@ -22,12 +22,13 @@ h1 {
 .input-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start; /* Updated: Align elements to the start */
     margin-bottom: 20px;
 }
 
 .input-container label {
     margin-right: 10px;
+    white-space: nowrap; /* Updated: Prevent label from wrapping */
 }
 
 .input-container input[type="text"] {
@@ -52,5 +53,4 @@ canvas {
     width: 100%; /* Adjust the width as desired */
     display: block;
     margin: 0 auto;
-    box-sizing: border-box;
 }

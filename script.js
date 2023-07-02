@@ -94,8 +94,7 @@ function renderChart(dates, actualEarnings, earningsEstimates) {
                 point: {
                     radius: 4,
                     hitRadius: 10,
-                    hoverRadius: 5,
-                    radiusPlus: 0 // Ensures point radius does not change when lines are toggled off
+                    hoverRadius: 5
                 }
             },
             plugins: {
@@ -126,12 +125,14 @@ function renderChart(dates, actualEarnings, earningsEstimates) {
     }));
 }
 
-
 function toggleLines() {
     showLines = !showLines;
 
     earningsChart.data.datasets.forEach((dataset, index) => {
         dataset.borderWidth = showLines ? 2 : 0;
+        dataset.hitRadius += showLines ? -1 : 1;
+        // dataset.radius += showLines ? -1 : 1;
+        dataset.hoverRadius += showLines ? -1 : 1;
     });
 
     earningsChart.update();
