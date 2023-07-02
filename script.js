@@ -1,22 +1,16 @@
 var earningsChart;
 var showLines = true;
 
+var originalDatasets = [];
+
 function fetchEarnings() {
     var ticker = document.getElementById("ticker").value;
 
-    // Replace 'YOUR_API_KEY' with your actual AlphaVantage API key
     var apiKey = '6KGDHDCK8Y9B9G2Q';
 
-    // Create a new XMLHttpRequest object
     var xhr = new XMLHttpRequest();
-
-    // Construct the API URL
     var url = `https://www.alphavantage.co/query?function=EARNINGS&symbol=${ticker}&apikey=${apiKey}`;
-
-    // Set the request method and URL
     xhr.open('GET', url, true);
-
-    // Define the onload callback function
     xhr.onload = function() {
         if (xhr.status === 200) {
             var data = JSON.parse(xhr.responseText);
@@ -35,8 +29,6 @@ function fetchEarnings() {
             renderChart(dates, actualEarnings, earningsEstimates);
         }
     };
-
-    // Send the request
     xhr.send();
 }
 
@@ -56,13 +48,23 @@ function renderChart(dates, actualEarnings, earningsEstimates) {
                 data: actualEarnings,
                 borderColor: 'blue',
                 fill: false,
-                borderWidth: showLines ? 2 : 0
+                pointStyle: 'circle',
+                pointBackgroundColor: 'blue',
+                originalOptions: {
+                    borderColor: 'blue',
+                    pointBackgroundColor: 'blue'
+                }
             }, {
                 label: 'Earnings Estimates',
                 data: earningsEstimates,
                 borderColor: 'green',
                 fill: false,
-                borderWidth: showLines ? 2 : 0
+                pointStyle: 'circle',
+                pointBackgroundColor: 'green',
+                originalOptions: {
+                    borderColor: 'green',
+                    pointBackgroundColor: 'green'
+                }
             }]
         },
         options: {
@@ -86,20 +88,51 @@ function renderChart(dates, actualEarnings, earningsEstimates) {
             },
             elements: {
                 line: {
-                    tension: 0, // Remove lines between data points
-                    borderWidth: 2 // Set line width to distinguish data points
+                    tension: 0,
+                    borderWidth: showLines ? 2 : 0
                 },
                 point: {
-                    radius: 4, // Set point radius to make data points more visible
+                    radius: 4,
                     hitRadius: 10,
-                    hoverRadius: 5
+                    hoverRadius: 5,
+                    radiusPlus: 0 // Ensures point radius does not change when lines are toggled off
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        generateLabels: function(chart) {
+                            var labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+                            labels.forEach(function(label) {
+                                var dataset = chart.data.datasets[label.datasetIndex];
+                                if (label.datasetIndex === 0) {
+                                    label.fillStyle = dataset.borderColor;
+                                } else if (label.datasetIndex === 1) {
+                                    label.fillStyle = dataset.borderColor;
+                                }
+                            });
+                            return labels;
+                        }
+                    }
                 }
             }
         }
     });
+
+    originalDatasets = earningsChart.data.datasets.map(dataset => ({
+        borderColor: dataset.borderColor,
+        pointStyle: dataset.pointStyle,
+        pointBackgroundColor: dataset.pointBackgroundColor
+    }));
 }
+
 
 function toggleLines() {
     showLines = !showLines;
-    renderChart(earningsChart.data.labels, earningsChart.data.datasets[0].data, earningsChart.data.datasets[1].data);
+
+    earningsChart.data.datasets.forEach((dataset, index) => {
+        dataset.borderWidth = showLines ? 2 : 0;
+    });
+
+    earningsChart.update();
 }
