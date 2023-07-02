@@ -10,7 +10,7 @@
         <h1>Stock Earnings</h1>
 
         <div class="input-container">
-            <label for="ticker">Enter Stock Ticker:</label>
+            <label for="ticker">Enter Stock Ticker: </label>
             <input type="text" id="ticker" />
             <button onclick="fetchEarnings()">Get Earnings</button>
         </div>
@@ -20,6 +20,9 @@
         </div>
 
         <canvas id="earningsChart"></canvas>
+
+        <br>
+
         <table id="earningsTable" style="display: none;">
             <thead>
                 <tr>
@@ -28,11 +31,18 @@
                     <th>Actual Earnings</th>
                     <th>Earnings Estimates</th>
                     <th>Beats/Misses</th>
+                    <th>%</th>
                 </tr>
             </thead>
             <tbody>
             </tbody>
         </table>
+    </div>
+
+    <div class="input-container" id="footer-container">
+        <label for="customKey">Not loading? Enter your own AlphaVantage API key: </label>
+        <input type="text" id="customKey" />
+        <button onclick="saveKey()">Save</button>
     </div>
 
     <script src="script.js"></script>

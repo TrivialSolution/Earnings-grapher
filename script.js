@@ -1,12 +1,11 @@
 var earningsChart;
+var apiKey = '6KGDHDCK8Y9B9G2Q';
 var showLines = true;
 
 var originalDatasets = [];
 
 function fetchEarnings() {
     var ticker = document.getElementById("ticker").value;
-
-    var apiKey = '6KGDHDCK8Y9B9G2Q';
 
     var xhr = new XMLHttpRequest();
     var url = `https://www.alphavantage.co/query?function=EARNINGS&symbol=${ticker}&apikey=${apiKey}`;
@@ -21,17 +20,28 @@ function fetchEarnings() {
             var actualEarnings = [];
             var earningsEstimates = [];
             var surprises = [];
+            var surprisePercents = [];
 
             for (var i = 0; i < earningsData.length; i++) {
                 endingDates.push(earningsData[i].fiscalDateEnding);
                 reportDates.push(earningsData[i].reportedDate);
-                actualEarnings.push(parseFloat(earningsData[i].reportedEPS));
-                earningsEstimates.push(parseFloat(earningsData[i].estimatedEPS));
-                surprises.push(parseFloat(earningsData[i].surprise));
+                actualEarnings.push(parseFloat(earningsData[i].reportedEPS).toFixed(2));
+                earningsEstimates.push(parseFloat(earningsData[i].estimatedEPS).toFixed(2));
+
+                var surprise = parseFloat(earningsData[i].surprise).toFixed(2);
+                if (surprise > 0)
+                    surprise = '+' + surprise;
+                surprises.push(surprise);
+
+                var surprisePercentage = parseFloat(earningsData[i].surprisePercentage).toFixed(0);
+                if (surprisePercentage > 0)
+                    surprisePercentage = '+' + surprisePercentage;
+                surprisePercentage += '%';
+                surprisePercents.push(surprisePercentage);
             }
 
             renderChart(endingDates, actualEarnings, earningsEstimates);
-            renderTable(endingDates, reportDates, actualEarnings, earningsEstimates, surprises);
+            renderTable(endingDates, reportDates, actualEarnings, earningsEstimates, surprises, surprisePercents);
         }
     };
     xhr.send();
@@ -136,7 +146,7 @@ function renderChart(dates, actualEarnings, earningsEstimates) {
     }));
 }
 
-function renderTable(endingDates, reportDates, actualEarnings, earningsEstimates, surprises) {
+function renderTable(endingDates, reportDates, actualEarnings, earningsEstimates, surprises, surprisePercents) {
     var tableBody = document.getElementById("earningsTable").getElementsByTagName('tbody')[0];
     tableBody.innerHTML = '';
 
@@ -147,12 +157,14 @@ function renderTable(endingDates, reportDates, actualEarnings, earningsEstimates
         var actualEarningsCell = row.insertCell(2);
         var earningsEstimatesCell = row.insertCell(3);
         var surpriseCell = row.insertCell(4);
+        var surprisePercentsCell = row.insertCell(5);
 
         endingDateCell.innerHTML = endingDates[i];
         reportDateCell.innerHTML = reportDates[i];
         actualEarningsCell.innerHTML = actualEarnings[i];
         earningsEstimatesCell.innerHTML = earningsEstimates[i];
         surpriseCell.innerHTML = surprises[i];
+        surprisePercentsCell.innerHTML = surprisePercents[i];
     }
 }
 
@@ -167,4 +179,8 @@ function toggleLines() {
     });
 
     earningsChart.update();
+}
+
+function saveKey() {
+    apiKey = document.getElementById("customKey").value;
 }
