@@ -25,19 +25,10 @@ function fetchEarnings() {
             for (var i = 0; i < earningsData.length; i++) {
                 endingDates.push(earningsData[i].fiscalDateEnding);
                 reportDates.push(earningsData[i].reportedDate);
-                actualEarnings.push(parseFloat(earningsData[i].reportedEPS).toFixed(2));
-                earningsEstimates.push(parseFloat(earningsData[i].estimatedEPS).toFixed(2));
-
-                var surprise = parseFloat(earningsData[i].surprise).toFixed(2);
-                if (surprise > 0)
-                    surprise = '+' + surprise;
-                surprises.push(surprise);
-
-                var surprisePercentage = parseFloat(earningsData[i].surprisePercentage).toFixed(0);
-                if (surprisePercentage > 0)
-                    surprisePercentage = '+' + surprisePercentage;
-                surprisePercentage += '%';
-                surprisePercents.push(surprisePercentage);
+                actualEarnings.push(parseFloat(earningsData[i].reportedEPS));
+                earningsEstimates.push(parseFloat(earningsData[i].estimatedEPS));
+                surprises.push(parseFloat(earningsData[i].surprise));
+                surprisePercents.push(parseFloat(earningsData[i].surprisePercentage));
             }
 
             renderChart(endingDates, actualEarnings, earningsEstimates);
@@ -146,6 +137,13 @@ function renderChart(dates, actualEarnings, earningsEstimates) {
     }));
 }
 
+const dollarFormat = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',  
+    minimumFractionDigits: 2, 
+    maximumFractionDigits: 2, 
+});
+
 function renderTable(endingDates, reportDates, actualEarnings, earningsEstimates, surprises, surprisePercents) {
     var tableBody = document.getElementById("earningsTable").getElementsByTagName('tbody')[0];
     tableBody.innerHTML = '';
@@ -161,10 +159,11 @@ function renderTable(endingDates, reportDates, actualEarnings, earningsEstimates
 
         endingDateCell.innerHTML = endingDates[i];
         reportDateCell.innerHTML = reportDates[i];
-        actualEarningsCell.innerHTML = actualEarnings[i];
-        earningsEstimatesCell.innerHTML = earningsEstimates[i];
-        surpriseCell.innerHTML = surprises[i];
-        surprisePercentsCell.innerHTML = surprisePercents[i];
+        actualEarningsCell.innerHTML = dollarFormat.format(actualEarnings[i]);
+        earningsEstimatesCell.innerHTML = dollarFormat.format(earningsEstimates[i]);
+
+        surpriseCell.innerHTML = ((surprises[i] > 0) ? '+' : '') + dollarFormat.format(surprises[i]);
+        surprisePercentsCell.innerHTML = ((surprisePercents[i] > 0) ? '+' : '') + surprisePercents[i].toFixed(0) + '%';
     }
 }
 
