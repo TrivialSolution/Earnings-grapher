@@ -16,18 +16,22 @@ function fetchEarnings() {
             var data = JSON.parse(xhr.responseText);
             var earningsData = data.quarterlyEarnings;
 
-            var dates = [];
+            var endingDates = [];
+            var reportDates = [];
             var actualEarnings = [];
             var earningsEstimates = [];
+            var surprises = [];
 
             for (var i = 0; i < earningsData.length; i++) {
-                dates.push(earningsData[i].fiscalDateEnding);
+                endingDates.push(earningsData[i].fiscalDateEnding);
+                reportDates.push(earningsData[i].reportedDate);
                 actualEarnings.push(parseFloat(earningsData[i].reportedEPS));
                 earningsEstimates.push(parseFloat(earningsData[i].estimatedEPS));
+                surprises.push(parseFloat(earningsData[i].surprise));
             }
 
-            renderChart(dates, actualEarnings, earningsEstimates);
-            renderTable(dates, actualEarnings, earningsEstimates);
+            renderChart(endingDates, actualEarnings, earningsEstimates);
+            renderTable(endingDates, reportDates, actualEarnings, earningsEstimates, surprises);
         }
     };
     xhr.send();
@@ -132,19 +136,23 @@ function renderChart(dates, actualEarnings, earningsEstimates) {
     }));
 }
 
-function renderTable(dates, actualEarnings, earningsEstimates) {
+function renderTable(endingDates, reportDates, actualEarnings, earningsEstimates, surprises) {
     var tableBody = document.getElementById("earningsTable").getElementsByTagName('tbody')[0];
     tableBody.innerHTML = '';
 
-    for (var i = 0; i < dates.length; i++) {
+    for (var i = 0; i < endingDates.length; i++) {
         var row = tableBody.insertRow(i);
-        var dateCell = row.insertCell(0);
-        var actualEarningsCell = row.insertCell(1);
-        var earningsEstimatesCell = row.insertCell(2);
+        var endingDateCell = row.insertCell(0);
+        var reportDateCell = row.insertCell(1);
+        var actualEarningsCell = row.insertCell(2);
+        var earningsEstimatesCell = row.insertCell(3);
+        var surpriseCell = row.insertCell(4);
 
-        dateCell.innerHTML = dates[i];
+        endingDateCell.innerHTML = endingDates[i];
+        reportDateCell.innerHTML = reportDates[i];
         actualEarningsCell.innerHTML = actualEarnings[i];
         earningsEstimatesCell.innerHTML = earningsEstimates[i];
+        surpriseCell.innerHTML = surprises[i];
     }
 }
 
@@ -153,8 +161,9 @@ function toggleLines() {
 
     earningsChart.data.datasets.forEach((dataset, index) => {
         dataset.borderWidth = showLines ? 2 : 0;
-        dataset.hitRadius += showLines ? -1 : 1;
-        dataset.hoverRadius += showLines ? -1 : 1;
+        // dataset.radius += showLines ? -5 : 5;
+        // dataset.hitRadius += showLines ? -1 : 1;
+        // dataset.hoverRadius += showLines ? -1 : 1;
     });
 
     earningsChart.update();
