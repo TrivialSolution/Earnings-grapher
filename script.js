@@ -1,6 +1,11 @@
 var earningsChart;
-var apiKey = '6KGDHDCK8Y9B9G2Q';
 var showLines = true;
+
+var apiKey;
+if (document.cookie && document.cookie !== "")
+    apiKey = document.cookie;
+else
+    apiKey = '6KGDHDCK8Y9B9G2Q';
 
 var originalDatasets = [];
 
@@ -182,4 +187,6 @@ function toggleLines() {
 
 function saveKey() {
     apiKey = document.getElementById("customKey").value;
+    document.cookie = apiKey;  
 }
+
