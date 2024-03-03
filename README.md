@@ -1,3 +1,7 @@
+## Live Site
+
+You can access a live version of the site [here](eps.matthewachandler.com).
+
 ## How to use
 
 Simply enter in the stock ticker for any publicly traded company (case insensitive), and the page will generate a graph and table of the complete earnings history for that company.
