@@ -1,11 +1,12 @@
 var earningsChart;
 var showLines = true;
+var setKey = false;
 
 var apiKey;
-if (document.cookie && document.cookie !== "")
+if (document.cookie && document.cookie !== "") {
+    setKey = true;
     apiKey = document.cookie;
-else
-    apiKey = '6KGDHDCK8Y9B9G2Q';
+}
 
 var originalDatasets = [];
 
@@ -13,7 +14,15 @@ function fetchEarnings() {
     var ticker = document.getElementById("ticker").value;
 
     var xhr = new XMLHttpRequest();
-    var url = `https://www.alphavantage.co/query?function=EARNINGS&symbol=${ticker}&apikey=${apiKey}`;
+    // if already have API
+    if (setKey) {
+        var url = `https://www.alphavantage.co/query?function=EARNINGS&symbol=${ticker}&apikey=${apiKey}`;
+    }
+    // if want to use default API key
+    else
+    {
+        var url = `http://107.174.181.11:5000/eps?function=EARNINGS&symbol=${ticker}`;
+    }
     xhr.open('GET', url, true);
     xhr.onload = function() {
         if (xhr.status === 200) {
