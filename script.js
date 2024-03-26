@@ -198,6 +198,7 @@ function toggleLines() {
 
 function saveKey() {
     apiKey = document.getElementById("customKey").value;
+    setKey = true
     document.cookie = apiKey;  
 }
 
