@@ -2,6 +2,8 @@ var earningsChart;
 var showLines = true;
 var setKey = false;
 
+const PROXY_ADDRESS = "http://107.174.181.11:5000/eps"
+
 var apiKey;
 if (document.cookie && document.cookie !== "") {
     setKey = true;
@@ -14,14 +16,14 @@ function fetchEarnings() {
     var ticker = document.getElementById("ticker").value;
 
     var xhr = new XMLHttpRequest();
-    // if already have API
+    // if already have personal API key
     if (setKey) {
         var url = `https://www.alphavantage.co/query?function=EARNINGS&symbol=${ticker}&apikey=${apiKey}`;
     }
-    // if want to use default API key
+    // if want to use default API key, goes through proxy server
     else
     {
-        var url = `http://107.174.181.11:5000/eps?function=EARNINGS&symbol=${ticker}`;
+        var url = `${PROXY_ADDRESS}?function=EARNINGS&symbol=${ticker}`;
     }
     xhr.open('GET', url, true);
     xhr.onload = function() {
