@@ -2,7 +2,7 @@ var earningsChart;
 var showLines = true;
 var setKey = false;
 
-const PROXY_ADDRESS = "https://api.matthewachandler.com:5000/eps" //"http://107.174.181.11:5000/eps"
+const PROXY_ADDRESS = "http://107.174.181.11:5000/eps"
 
 var apiKey;
 if (document.cookie && document.cookie !== "") {
@@ -25,6 +25,7 @@ function fetchEarnings() {
     {
         var url = `${PROXY_ADDRESS}?function=EARNINGS&symbol=${ticker}`;
     }
+    // console.log(url)
     xhr.open('GET', url, true);
     xhr.onload = function() {
         if (xhr.status === 200) {
