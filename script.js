@@ -2,7 +2,10 @@ var earningsChart;
 var showLines = true;
 var setKey = false;
 
-const PROXY_ADDRESS = "https://api.matthewachandler.com/eps"
+const PROXY_ADDRESS = "https://api.matthewachandler.com/eps";
+const LIMIT_RESPONSE = "Thank you for using Alpha Vantage! Our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits.";
+const LIMIT_ALERT = "The 25 request per day limit has been exceeded. Either try again tomorrow or enter your own AlphaVantage API key at the bottom of the page to continue. Learn more about usage limits in the README found in the source code.";
+
 
 var apiKey;
 if (document.cookie && document.cookie !== "") {
@@ -30,6 +33,13 @@ function fetchEarnings() {
     xhr.onload = function() {
         if (xhr.status === 200) {
             var data = JSON.parse(xhr.responseText);
+
+            // handle API overload
+            console.log(data)
+            if (data["Information"] === LIMIT_RESPONSE) {
+                alert(LIMIT_ALERT);
+            }
+
             var earningsData = data.quarterlyEarnings;
 
             var endingDates = [];
