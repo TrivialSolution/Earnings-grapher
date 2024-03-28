@@ -2,7 +2,7 @@ var earningsChart;
 var showLines = true;
 var setKey = false;
 
-const PROXY_ADDRESS = "http://107.174.181.11:5000/eps"
+const PROXY_ADDRESS = "https://api.matthewachandler.com/eps"
 
 var apiKey;
 if (document.cookie && document.cookie !== "") {
