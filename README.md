@@ -1,6 +1,6 @@
 ## Live Site
 
-You can access a live version of the site [here](eps.matthewachandler.com).
+You can access a live version of the site [here](eps.machandler.com).
 
 ## How to use
 
