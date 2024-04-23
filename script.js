@@ -15,10 +15,9 @@ if (document.cookie && document.cookie !== "") {
 
 var originalDatasets = [];
 
-function fetchEarnings() {
+async function fetchEarnings() {
     var ticker = document.getElementById("ticker").value;
 
-    var xhr = new XMLHttpRequest();
     // if already have personal API key
     if (setKey) {
         var url = `https://www.alphavantage.co/query?function=EARNINGS&symbol=${ticker}&apikey=${apiKey}`;
@@ -28,47 +27,48 @@ function fetchEarnings() {
     {
         var url = `${PROXY_ADDRESS}?function=EARNINGS&symbol=${ticker}`;
     }
-    // console.log(url)
-    xhr.open('GET', url, true);
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            var data = JSON.parse(xhr.responseText);
-
-            // handle API overload
-            console.log(data)
-            if (data["Information"] === LIMIT_RESPONSE) {
-                alert(LIMIT_ALERT);
-            }
-
-            var earningsData = data.quarterlyEarnings;
-
-            var endingDates = [];
-            var reportDates = [];
-            var actualEarnings = [];
-            var earningsEstimates = [];
-            var surprises = [];
-            var surprisePercents = [];
-
-            for (var i = 0; i < earningsData.length; i++) {
-                endingDates.push(earningsData[i].fiscalDateEnding);
-                reportDates.push(earningsData[i].reportedDate);
-                actualEarnings.push(parseFloat(earningsData[i].reportedEPS));
-                earningsEstimates.push(parseFloat(earningsData[i].estimatedEPS));
-                surprises.push(parseFloat(earningsData[i].surprise));
-                surprisePercents.push(parseFloat(earningsData[i].surprisePercentage));
-            }
-
-            renderChart(endingDates, actualEarnings, earningsEstimates);
-            renderTable(endingDates, reportDates, actualEarnings, earningsEstimates, surprises, surprisePercents);
+    try {
+        const res = await fetch(url);
+        if (!res.ok) {
+            throw new Error(`HTTP Response invalid. Status ${res.status}`);
         }
-    };
-    xhr.send();
+        var data = await res.json();
 
-    // Show the "Toggle Lines" button after fetching earnings data
-    document.getElementById("toggleButtonContainer").style.display = "block";
+        // handle API overload
+        if (data["Information"] === LIMIT_RESPONSE) {
+            throw new Error(LIMIT_ALERT);
+        }
 
-    // Show the table after fetching earnings data
-    document.getElementById("earningsTable").style.display = "table";
+        var earningsData = data.quarterlyEarnings;
+
+        var endingDates = [];
+        var reportDates = [];
+        var actualEarnings = [];
+        var earningsEstimates = [];
+        var surprises = [];
+        var surprisePercents = [];
+
+        for (var i = 0; i < earningsData.length; i++) {
+            endingDates.push(earningsData[i].fiscalDateEnding);
+            reportDates.push(earningsData[i].reportedDate);
+            actualEarnings.push(parseFloat(earningsData[i].reportedEPS));
+            earningsEstimates.push(parseFloat(earningsData[i].estimatedEPS));
+            surprises.push(parseFloat(earningsData[i].surprise));
+            surprisePercents.push(parseFloat(earningsData[i].surprisePercentage));
+        }
+
+        renderChart(endingDates, actualEarnings, earningsEstimates);
+        renderTable(endingDates, reportDates, actualEarnings, earningsEstimates, surprises, surprisePercents);
+
+
+        // Show the "Toggle Lines" button after fetching earnings data
+        document.getElementById("toggleButtonContainer").style.display = "block";
+
+        // Show the table after fetching earnings data
+        document.getElementById("earningsTable").style.display = "table";
+    } catch (error) {
+        alert(`Error: ${error}`);
+    }
 }
 
 function renderChart(dates, actualEarnings, earningsEstimates) {
