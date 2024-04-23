@@ -17,3 +17,7 @@ The Alpha Vantage API free tier only allows 25 requests per day per client IP, s
 To mitigate this, at the bottom of the webpage you can enter in your own Alpha Vantage API key, which you can generate for free on the [Alpha Vantage website](https://www.alphavantage.co/support/#api-key). The key is saved to your browser's cookies, so you do not have to enter it every time. This will allow you to generate up to 25 graphs/tables per day without having to share the proxy server's limit with other users.
 
 <img src="https://github.com/Matthew-Chandler/EPS-View/assets/48606413/6b2ec6a6-1439-403f-9f41-35bbc6593645" width="500" height="auto">
+
+## Attributions
+
+The favicon `icon.png` was taken from [Icons8](https://icons8.com/icon/NFpGURb4KzRP/stocks).
